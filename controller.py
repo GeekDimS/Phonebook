@@ -14,6 +14,10 @@ def run():
     dfn_find = data_finder.find # Ф-я поиска данных в файле Вход: ('lastname','name','phone') Выход: (?список строк в формате csv?)
     fw_read_next = file_worker.fw1 # Ф-я чтения следующей строки данных Вход:(Void) Выход: ('End # достигнут конец файла #', (?строка в формате csv?))
     fw_write = file_worker.add_to_csv_file # Ф-я записи новой строки в конец файла Вход:(?строка в формате csv?) Выход: (Void)
+    fw_exp_html = file_worker.export_from_csv_to_html_file
+    fw_exp_json = file_worker.export_from_csv_to_json_file
+    fw_imp_html = file_worker.???
+    fw_imp_json = file_worker.???
 
     mode, data = dpf_req()
     if mode == 'end':
@@ -22,17 +26,18 @@ def run():
         if not fw_write(data):  # Возможны проблемы - нужен список списков
             error('Ошибка добавления записи в файл')
             # Сделать возвращаемое значение из file_worker.add_to_csv_file True, если нет ошибок
+        return True
     elif mode == 'search':
         # coding here
         data_fainding = dfn_find(data)  # Передаём данные для поиска в базе
-        dpf_out(data_fainding)          # Передаём результат для вывода пользователю
-        return
+        dpf_out(data_fainding)          # Передаём результат в privider для вывода пользователю 
+        return True
     elif mode == 'export_html':
-        # coding here
-        return
+        fw_exp_html()
+        return True
     elif mode == 'export_json':
-        # coding here
-        return
+        fw_exp_json()
+        return True
     elif mode == 'import_html':
         # coding here
         return
