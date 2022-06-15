@@ -1,4 +1,6 @@
 import data_checker
+import data_finder
+import file_worker
 import tkinter
 from tkinter import *
 from tkinter import messagebox
@@ -31,14 +33,14 @@ def show_find_data_message(name, lastname, phone):
 
 
 def find_data_in_database(name, lastname, phone):
-    global mode
-    global data
 
-    mode, data = "search", [[lastname.get(), name.get(), "+" + phone.get()]]
+    data_fainding = data_finder.find(name.get(), lastname.get(), phone.get())
+    #mode, data = "search", [[lastname.get(), name.get(), "+" + phone.get()]]
     # show_find_data_message(name.get(), lastname.get(), phone.get())
-    name.set("")
-    lastname.set("")
-    phone.set("")
+    lastname.set(data_fainding[0][0])
+    name.set(data_fainding[0][1])
+    phone.set(data_fainding[0][2])
+
 
 def find_data_form_info():
     name = StringVar()
@@ -64,11 +66,26 @@ def find_data_form_info():
     phone_input.grid(row = 5, column = 2, padx = 5, pady = 5)
 
     #Значения по умолчанию
-    name_input.insert(0, "Инна")
-    lastname_input.insert(0, "Горшкова")
-    phone_input.insert(0, "77777777777")
+    name_input.insert(0, "")
+    lastname_input.insert(0, "")
+    phone_input.insert(0, "")
 
-    message_button = Button(text = "   Найти   ", command = lambda: find_data_in_database(name, lastname, phone))
+    languages = ["Python", "JavaScript", "C#", "Java", "C/C++", "Swift",
+             "PHP", "Visual Basic.NET", "F#", "Ruby", "Rust", "R", "Go",
+             "T-SQL", "PL-SQL", "Typescript"]
+
+    scrollbar = Scrollbar()
+    scrollbar.grid(row = 9, column = 2, sticky='nsw') #padx = 0, pady = 0)
+    
+    languages_listbox = Listbox(yscrollcommand=scrollbar.set, width=40)
+    languages_listbox.grid(row = 9, column = 0, columnspan=2, sticky='nswe')
+    
+    for language in languages:
+        languages_listbox.insert(END, language)
+    
+    scrollbar.config(command=languages_listbox.yview)
+
+    message_button = Button(text = "   Найти   ", command = lambda: find_data_in_database(name , lastname , phone))
     message_button.grid(row = 7, column = 2, padx = 5, pady = 5)
 
 def show_add_to_file_message(name, lastname, phone):
@@ -114,9 +131,9 @@ def add_data_form_info(root):
     phone_input.grid(row = 5, column = 2, padx = 5, pady = 5)
 
     #Значения по умолчанию
-    name_input.insert(0, "Илья")
-    lastname_input.insert(0, "Кошкин")
-    phone_input.insert(0, "4768888888")
+    name_input.insert(0, "")
+    lastname_input.insert(0, "")
+    phone_input.insert(0, "")
 
     reg_phone = add_window.register(data_checker.check_symbol_phone)
     phone_input.config(validate = "key", validatecommand = (reg_phone, "%P"))

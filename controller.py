@@ -1,8 +1,11 @@
 from distutils.log import error
+from statistics import mode
 import data_finder
 import data_provider
 import file_worker
 import data_former
+from waiting import wait
+
 
 def run():
     # error = False
@@ -16,34 +19,41 @@ def run():
     fw_write = file_worker.add_to_csv_file # Ф-я записи новой строки в конец файла Вход:(?строка в формате csv?) Выход: (Void)
     fw_exp_html = file_worker.export_from_csv_to_html_file
     fw_exp_json = file_worker.export_from_csv_to_json_file
-    fw_imp_html = file_worker.???
-    fw_imp_json = file_worker.???
+    # fw_imp_html = file_worker.???
+    # fw_imp_json = file_worker.???
 
-    mode, data = dpf_req()
-    if mode == 'end':
+    ## mode_work, list_data = dpf_req()
+    global mode_work
+    global list_data
+    mode_work, list_data = '',''        # Инициализация режима работы и рабочего списка
+    data_provider.main_menu()
+    
+
+
+    if mode_work == 'end':
         return False
-    elif mode == 'add':
-        if not fw_write(data):  # Возможны проблемы - нужен список списков
+    elif mode_work == 'add':
+        if not fw_write(list_data):  # Возможны проблемы - нужен список списков
             error('Ошибка добавления записи в файл')
             # Сделать возвращаемое значение из file_worker.add_to_csv_file True, если нет ошибок
         return True
-    elif mode == 'search':
+    elif mode_work == 'search':
         # coding here
-        data_fainding = dfn_find(data)  # Передаём данные для поиска в базе
+        data_fainding = dfn_find(list_data)  # Передаём данные для поиска в базе
         dpf_out(data_fainding)          # Передаём результат в privider для вывода пользователю 
         return True
-    elif mode == 'export_html':
+    elif mode_work == 'export_html':
         fw_exp_html()
         return True
-    elif mode == 'export_json':
+    elif mode_work == 'export_json':
         fw_exp_json()
         return True
-    elif mode == 'import_html':
-        # coding here
-        return
-    elif mode == 'import_json':
-        # coding here
-        return
+    # elif mode_work == 'import_html':
+    #     # coding here
+    #     return
+    # elif mode_work == 'import_json':
+    #     # coding here
+    #     return
     else:
         error('Ошибка выполнения программы')         # Ф-я обработки ошибок.
         # Написать! Выводит сообщение об ошибке с помощью provider

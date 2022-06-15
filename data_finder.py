@@ -1,6 +1,6 @@
 import file_worker as fw
 
-def find(lname, name, phnumber):
+def find(name, lname, phnumber):
     #not_eof = True
     res = []
     data_base = fw.read_from_csv_file()         # Считываем данные из файла. Данные в виде списка словарей
@@ -12,6 +12,6 @@ def find(lname, name, phnumber):
         #not_eof, str_result = fw.read_next()    # Считываем строку из файла
         # lname_f, name_f, phnumber_f = str_result.split(',')         # Парсим входную строку
 
-        if lname == lname_f and name_f == '' or name == name_f and lname_f == '' or lname == lname_f and name == name_f or phnumber == phnumber_f:    # Если есть совпадение хоть по одному полю или по двум с именами
-            res.append(lname_f, name_f, phnumber_f)      # то добавляем запись в результирующий список
+        if (lname == lname_f and name == '') or (name == name_f and lname == '') or (lname == lname_f and name == name_f) or (phnumber == phnumber_f):    # Если есть совпадение хоть по одному полю или по двум с именами
+            res.append([lname_f, name_f, phnumber_f])   # то добавляем запись в результирующий список
     return res
