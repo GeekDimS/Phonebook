@@ -2,24 +2,27 @@ import data_checker
 import data_finder
 import file_worker
 import data_former
+import logger
 import tkinter
 from tkinter import *
 from tkinter import messagebox
 
 # mode = ""
-# data = [[]]
+# data = [[]]  
 
 ADD_WINDOW_HEADER = "Добавление в базу"
 FIND_WINDOW_HEADER = "Поиск в базе"
 
 def export_to_json():
     file_worker.export_from_csv_to_json_file()
+    logger.add_in_log('Произведён экспорт базы из формата csv в формат json')
     # global mode
     # mode = "export_json"
 
 
 def export_to_html():
     file_worker.export_from_csv_to_html_file()
+    logger.add_in_log('Произведён экспорт базы из формата csv в формат html')
     # global mode
     # mode = "export_html"
 
@@ -46,15 +49,18 @@ def find_data_in_database(name, lastname, phone, data_finding_listbox):
     find_window_yes_message = ""
 
     if not data_checker.check_data_empty_all(name.get(), lastname.get(), phone.get()):
-        show_find_data_message(FIND_WINDOW_HEADER, find_window_empty_message) 
+        show_find_data_message(FIND_WINDOW_HEADER, find_window_empty_message)
+        logger.add_in_log(f'{FIND_WINDOW_HEADER} "{name.get()}" "{lastname.get()}" "{phone.get()}" {find_window_empty_message}')
     else:
         lastname_string, name_string, phone_string = data_checker.data_correction(lastname.get(), name.get(), phone.get())
         data_finding = data_finder.find(name_string, lastname_string, phone_string)
         if len(data_finding) == 0:
             show_find_data_message(FIND_WINDOW_HEADER, find_window_no_message)
+            logger.add_in_log(f'{FIND_WINDOW_HEADER} "{name.get()}" "{lastname.get()}" "{phone.get()}" {find_window_no_message}')
         else:
             find_window_yes_message = f'Найдено {len(data_finding)} записи(ей)\n'
             show_find_data_message(FIND_WINDOW_HEADER, find_window_yes_message)
+            logger.add_in_log(f'{FIND_WINDOW_HEADER} "{name.get()}" "{lastname.get()}" "{phone.get()}" {find_window_yes_message}')
             # scrollbar = Scrollbar(main_form)
             # scrollbar.pack(side = RIGHT, fill = Y)
     
@@ -190,11 +196,13 @@ def add_data_to_file(name, lastname, phone, form_name):
     add_window_message = "Запись успешно добавлена\n"
     if not data_checker.check_data_empty_at_least_one(name.get(), lastname.get(), phone.get()):
         show_add_to_file_message(ADD_WINDOW_HEADER, add_window_empty_message) 
+        logger.add_in_log(f'{ADD_WINDOW_HEADER} "{name.get()}" "{lastname.get()}" "{phone.get()}" {add_window_empty_message}')
     else:
         lastname_string, name_string, phone_string = data_checker.data_correction(lastname.get(), name.get(), phone.get())
         file_worker.add_to_csv_file([[ lastname_string, name_string, phone_string]])
         add_window_message += lastname_string + " " + name_string + " " + phone_string   
         show_add_to_file_message(ADD_WINDOW_HEADER, add_window_message)
+        logger.add_in_log(f'{ADD_WINDOW_HEADER} {add_window_message}')
 
         name.set("")
         lastname.set("")
@@ -257,6 +265,7 @@ def show_all_data(data_listbox):
     for data in all_data:
         data_listbox.insert(END, data_former.format_string(count, data_former.from_dict_to_value_list(data)))
         count += 1
+    logger.add_in_log('Показаны все записи из телефонной книги')
     
     # scrollbar.config(command = data_listbox.yview)
 
