@@ -8,7 +8,8 @@ def find_csv_separator(file_name):
         separator = sniffer.sniff(file.read(1000)).delimiter
     return separator
 
-file_name_csv = "data.csv"
+file_name_csv = "database.csv"
+file_name_import_csv = "data.csv"
 file_name_html = "data.html"
 file_name_json = "data.json"
 
@@ -52,7 +53,7 @@ def export_from_csv_to_json_file(file_name_from = file_name_csv, file_name_to = 
     Функция экспорта из csv файла в json файл 
     '''
     data = read_from_csv_file(file_name_from)
-    with open(file_name_json, 'w', encoding = 'UTF-8') as file_json:
+    with open(file_name_to, 'w', encoding = 'UTF-8') as file_json:
         json.dump(data, file_json)
 
 
@@ -64,6 +65,11 @@ def read_from_json_file(file_name = file_name_json):
     with open(file_name_json, 'r', encoding = 'UTF-8') as file_json:
         data = json.load(file_json)
     return data  
+
+def import_from_json_to_csv_file(file_name_from = file_name_json, file_name_to = file_name_import_csv):
+    '''
+    Функция импорта из json в csv файл 
+    '''
 
 
 def export_from_csv_to_html_file(file_name_from = file_name_csv, file_name_to = file_name_html):
@@ -84,28 +90,38 @@ def export_from_csv_to_html_file(file_name_from = file_name_csv, file_name_to = 
 
     with open(file_name_to, 'w', encoding = 'UTF-8') as file_html:
         file_html.write(data_html)
+    
+def import_from_html_to_csv_file(file_name_from = file_name_html, file_name_to = file_name_import_csv):
+    '''
+    Функция импорта из html в csv файл 
+    '''
+
   
 
-initial_data =[["Lastname", "Name", "Phone"], 
-            ["Петров", "Илья", "+79234567898"], 
-            ["Бобров", "Петр", "+79274567898"], 
-            ["Бочкова", "Анна", "+79784336598"],
-            ["Горшкова", "Инна", "+77777777777"]]
+# initial_data =[["Lastname", "Name", "Phone"], 
+#             ["Петров", "Илья", "+79234567898"], 
+#             ["Бобров", "Петр", "+79274567898"], 
+#             ["Бочкова", "Анна", "+79784336598"],
+#             ["Горшкова", "Инна", "+77777777777"],
+#             ["Печкин", "Иван", "+74951234567"],
+#             ["Белов", "Иван", "+73333333333"],
+#             ["Белоусова", "Инна", "+73333333367"],
+#             ["Мор", "Илья", "+74956767677"]]
 
-write_to_csv_file(initial_data)
-data = read_from_csv_file()
-print(data)
+# write_to_csv_file(initial_data)
+# data = read_from_csv_file()
+# print(data)
 
-add_data = [["Ледов", "Иван", "+72222222222"]]
-add_to_csv_file(add_data)
-data = read_from_csv_file()
-print(data)
+# add_data = [["Ледов", "Иван", "+72222222222"]]
+# add_to_csv_file(add_data)
+# data = read_from_csv_file()
+# print(data)
 
-export_from_csv_to_json_file()
-data = read_from_json_file()
-print(f'json - {data}')
+# export_from_csv_to_json_file()
+# data = read_from_json_file()
+# print(f'json - {data}')
 
-export_from_csv_to_html_file()
+# export_from_csv_to_html_file()
 
 # find_item = "Бобров"
 # for item in data:
