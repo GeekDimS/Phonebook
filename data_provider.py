@@ -111,6 +111,9 @@ def find_data_form_info(root, data_listbox):
     find_window.title("Поиск данных")
     find_window.geometry("280x140")
 
+
+
+
     name = StringVar()
     lastname = StringVar()
     phone = StringVar()
@@ -138,12 +141,18 @@ def find_data_form_info(root, data_listbox):
     lastname_input.insert(0, "")
     phone_input.insert(0, "")
 
+
     message_button = Button(find_window, text = "   Найти   ", command = lambda: find_data_in_database(name , lastname , phone, data_listbox))
     message_button.grid(row = 7, column = 2, padx = 5, pady = 5)
 
     # languages = ["Python", "JavaScript", "C#", "Java", "C/C++", "Swift",
     #          "PHP", "Visual Basic.NET", "F#", "Ruby", "Rust", "R", "Go",
     #          "T-SQL", "PL-SQL", "Typescript"]
+
+#     def find_data_in_database(name, lastname, phone):
+#         data_fainding = data_finder.find(name.get(), lastname.get(), phone.get())
+#         for item in data_fainding:
+#             fdate_listbox.insert(END, f'{item[0]} {item[1]} {item[2]}')
 
     # scrollbar = Scrollbar()
     # scrollbar.grid(row = 9, column = 2, sticky='nsw') #padx = 0, pady = 0)
@@ -155,6 +164,16 @@ def find_data_form_info(root, data_listbox):
     #     languages_listbox.insert(END, language)
     
     # scrollbar.config(command=languages_listbox.yview)
+
+#     fdate_listbox = Listbox(yscrollcommand=scrollbar.set, width=40)
+#     fdate_listbox.grid(row = 9, column = 0, columnspan=2, sticky='nswe')
+    
+#     # for language in languages:
+#     #     fdate_listbox.insert(END, language)
+    
+#     scrollbar.config(command=fdate_listbox.yview)
+
+    
 
 
 def show_add_to_file_message(header, message):
