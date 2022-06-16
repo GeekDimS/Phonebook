@@ -36,39 +36,39 @@ def import_from_html():
     # mode = "import_html"
 
 
-def show_find_data_message(name, lastname, phone, message):
-    messagebox.showinfo("Поиск в базе", "Запись успешно найдена???\n" + name + " " + lastname + " " + phone)
+def show_find_data_message(header, message):
+    messagebox.showinfo(header, message)
 
-
-def find_data_in_database(name, lastname, phone, additional_form, main_form):
+def find_data_in_database(name, lastname, phone, data_finding_listbox):
 
     find_window_empty_message = "Найти данные не получится. Все поля поиска пустые."
     find_window_no_message = "Записи удовлетворяющие условию не найдены."
     find_window_yes_message = ""
 
     if not data_checker.check_data_empty_all(name.get(), lastname.get(), phone.get()):
-        show_add_to_file_message(FIND_WINDOW_HEADER, find_window_empty_message) 
+        show_find_data_message(FIND_WINDOW_HEADER, find_window_empty_message) 
     else:
         lastname_string, name_string, phone_string = data_checker.data_correction(lastname.get(), name.get(), phone.get())
         data_finding = data_finder.find(name_string, lastname_string, phone_string)
         if len(data_finding) == 0:
-            show_add_to_file_message(FIND_WINDOW_HEADER, find_window_no_message)
+            show_find_data_message(FIND_WINDOW_HEADER, find_window_no_message)
         else:
             find_window_yes_message = f'Найдено {len(data_finding)} записи(ей)\n'
-            show_add_to_file_message(FIND_WINDOW_HEADER, find_window_yes_message)
-            scrollbar = Scrollbar(main_form)
-            scrollbar.pack(side = RIGHT, fill = Y)
+            show_find_data_message(FIND_WINDOW_HEADER, find_window_yes_message)
+            # scrollbar = Scrollbar(main_form)
+            # scrollbar.pack(side = RIGHT, fill = Y)
     
-            data_finding_listbox = Listbox(main_form, yscrollcommand=scrollbar.set, width = 75)
-            data_finding_listbox.pack(side = RIGHT, fill = Y)
+            # data_finding_listbox = Listbox(main_form, yscrollcommand=scrollbar.set, width = 75)
+            # data_finding_listbox.pack(side = RIGHT, fill = Y)
    
+            data_finding_listbox.delete(0, END)
             data_finding_listbox.insert(END, "№  Фамилия               Имя                  Телефон")
             count = 1
             for finding in data_finding:
                 data_finding_listbox.insert(END, data_former.format_string(count, finding))
                 count += 1
     
-            scrollbar.config(command = data_finding_listbox.yview)
+            # scrollbar.config(command = data_finding_listbox.yview)
 
 
         # add_window_message += lastname_string + " " + name_string + " " + phone_string   
@@ -106,7 +106,7 @@ def find_data_in_database(name, lastname, phone, additional_form, main_form):
     # return ""
 
 
-def find_data_form_info(root):
+def find_data_form_info(root, data_listbox):
     find_window = tkinter.Toplevel(root)
     find_window.title("Поиск данных")
     find_window.geometry("280x140")
@@ -138,7 +138,7 @@ def find_data_form_info(root):
     lastname_input.insert(0, "")
     phone_input.insert(0, "")
 
-    message_button = Button(find_window, text = "   Найти   ", command = lambda: find_data_in_database(name , lastname , phone, find_window, root))
+    message_button = Button(find_window, text = "   Найти   ", command = lambda: find_data_in_database(name , lastname , phone, data_listbox))
     message_button.grid(row = 7, column = 2, padx = 5, pady = 5)
 
     # languages = ["Python", "JavaScript", "C#", "Java", "C/C++", "Swift",
@@ -224,23 +224,22 @@ def add_data_form_info(root):
     message_button = Button(add_window, text = "Добавить", command = lambda: add_data_to_file(name, lastname, phone, add_window))
     message_button.grid(row = 7, column = 2, padx = 5, pady = 5)
 
-def show_all_data(root):
+def show_all_data(data_listbox):
     all_data = file_worker.read_from_csv_file()
-    scrollbar = Scrollbar(root)
-    scrollbar.pack(side = RIGHT, fill = Y)
+    # scrollbar = Scrollbar(root)
+    # scrollbar.pack(side = RIGHT, fill = Y)
     
-    data_listbox = Listbox(root, yscrollcommand=scrollbar.set, width = 75)
-    data_listbox.pack(side = RIGHT, fill = Y)
-
-    data_listbox.lift()
+    # data_listbox = Listbox(root, yscrollcommand=scrollbar.set, width = 75)
+    # data_listbox.pack(side = RIGHT, fill = Y)
    
+    data_listbox.delete(0, END)
     data_listbox.insert(END, "№  Фамилия               Имя                  Телефон")
     count = 1
     for data in all_data:
         data_listbox.insert(END, data_former.format_string(count, data_former.from_dict_to_value_list(data)))
         count += 1
     
-    scrollbar.config(command = data_listbox.yview)
+    # scrollbar.config(command = data_listbox.yview)
 
 
 def main_menu():
@@ -249,6 +248,17 @@ def main_menu():
     root.geometry("450x250")
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
+
+    scrollbar = Scrollbar(root)
+    scrollbar.pack(side = RIGHT, fill = Y)
+    
+    data_listbox = Listbox(root, yscrollcommand=scrollbar.set, width = 70)
+
+    message_button = Button(text = "Показать все данные",  background="#C0C0C0", command = lambda: show_all_data(data_listbox))
+    message_button.pack(side = TOP, fill = X)
+    data_listbox.pack(side = LEFT, fill = Y)
+
+    scrollbar.config(command = data_listbox.yview)
  
     main_menu = Menu() 
     #find_menu = Menu()
@@ -256,7 +266,7 @@ def main_menu():
     import_menu = Menu()
  
     main_menu.add_cascade(label = "Добавить данные", command = lambda: add_data_form_info(root))
-    main_menu.add_cascade(label = "Найти данные", command = lambda: find_data_form_info(root))
+    main_menu.add_cascade(label = "Найти данные", command = lambda: find_data_form_info(root, data_listbox))
     main_menu.add_cascade(label = "Экспорт данных", menu = export_menu)
     main_menu.add_cascade(label = "Импорт данных", menu = import_menu)
 
@@ -267,8 +277,7 @@ def main_menu():
     import_menu.add_command(label = "Из json формата", command = import_from_json)
     import_menu.add_command(label = "Из html формата", command = import_from_html)
 
-    message_button = Button(text = "Показать все данные",  background="#C0C0C0", command = lambda: show_all_data(root))
-    message_button.pack(side = TOP, fill = X)
+
 
     root.config(menu = main_menu)
  
