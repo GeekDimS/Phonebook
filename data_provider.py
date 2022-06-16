@@ -32,16 +32,6 @@ def show_find_data_message(name, lastname, phone):
     messagebox.showinfo("Поиск в базе", "Запись успешно найдена???\n" + name + " " + lastname + " " + phone)
 
 
-def find_data_in_database(name, lastname, phone):
-
-    data_fainding = data_finder.find(name.get(), lastname.get(), phone.get())
-    #mode, data = "search", [[lastname.get(), name.get(), "+" + phone.get()]]
-    # show_find_data_message(name.get(), lastname.get(), phone.get())
-    lastname.set(data_fainding[0][0])
-    name.set(data_fainding[0][1])
-    phone.set(data_fainding[0][2])
-
-
 def find_data_form_info():
     name = StringVar()
     lastname = StringVar()
@@ -70,20 +60,23 @@ def find_data_form_info():
     lastname_input.insert(0, "")
     phone_input.insert(0, "")
 
-    languages = ["Python", "JavaScript", "C#", "Java", "C/C++", "Swift",
-             "PHP", "Visual Basic.NET", "F#", "Ruby", "Rust", "R", "Go",
-             "T-SQL", "PL-SQL", "Typescript"]
+    def find_data_in_database(name, lastname, phone):
+        data_fainding = data_finder.find(name.get(), lastname.get(), phone.get())
+        for item in data_fainding:
+            fdate_listbox.insert(END, f'{item[0]} {item[1]} {item[2]}')
 
     scrollbar = Scrollbar()
     scrollbar.grid(row = 9, column = 2, sticky='nsw') #padx = 0, pady = 0)
     
-    languages_listbox = Listbox(yscrollcommand=scrollbar.set, width=40)
-    languages_listbox.grid(row = 9, column = 0, columnspan=2, sticky='nswe')
+    fdate_listbox = Listbox(yscrollcommand=scrollbar.set, width=40)
+    fdate_listbox.grid(row = 9, column = 0, columnspan=2, sticky='nswe')
     
-    for language in languages:
-        languages_listbox.insert(END, language)
+    # for language in languages:
+    #     fdate_listbox.insert(END, language)
     
-    scrollbar.config(command=languages_listbox.yview)
+    scrollbar.config(command=fdate_listbox.yview)
+
+    
 
     message_button = Button(text = "   Найти   ", command = lambda: find_data_in_database(name , lastname , phone))
     message_button.grid(row = 7, column = 2, padx = 5, pady = 5)
