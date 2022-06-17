@@ -1,4 +1,5 @@
 #'csv', html. json
+import data_former
 import csv
 import json
 
@@ -9,9 +10,10 @@ def find_csv_separator(file_name):
     return separator
 
 file_name_csv = "database.csv"
-file_name_import_csv = "data.csv"
+file_name_import_csv = "import_data.csv"
 file_name_html = "data.html"
 file_name_json = "data.json"
+DB_HEADER = ["Lastname", "Name", "Phone"]
 
 def read_from_csv_file( file_name = file_name_csv):
     '''
@@ -33,6 +35,7 @@ def write_to_csv_file(data, file_name = file_name_csv):
     '''
     with open(file_name, 'w', encoding = 'UTF-8') as file_csv:
         writer_to_file = csv.writer(file_csv)
+        writer_to_file.writerow(DB_HEADER)
         for row in data:
             writer_to_file.writerow(row)
 
@@ -62,7 +65,7 @@ def read_from_json_file(file_name = file_name_json):
     Функция чтения из json файла (на выходе список словарей)
     '''
     data = read_from_csv_file(file_name)
-    with open(file_name_json, 'r', encoding = 'UTF-8') as file_json:
+    with open(file_name, 'r', encoding = 'UTF-8') as file_json:
         data = json.load(file_json)
     return data  
 
@@ -70,6 +73,11 @@ def import_from_json_to_csv_file(file_name_from = file_name_json, file_name_to =
     '''
     Функция импорта из json в csv файл 
     '''
+    data_dict = read_from_json_file(file_name_from)
+    data_list = []
+    for i in range(len(data_dict)):
+        data_list.append(data_former.from_dict_to_value_list(data_dict[i])) 
+    write_to_csv_file(data_list, file_name_to)
 
 
 def export_from_csv_to_html_file(file_name_from = file_name_csv, file_name_to = file_name_html):
@@ -90,15 +98,31 @@ def export_from_csv_to_html_file(file_name_from = file_name_csv, file_name_to = 
 
     with open(file_name_to, 'w', encoding = 'UTF-8') as file_html:
         file_html.write(data_html)
-    
+
+
+def read_from_html_file(file_name = file_name_html):
+    '''
+    Функция чтения из json файла (на выходе список словарей)
+    '''
+    data_html = []
+    with open(file_name, 'r', encoding = 'UTF-8') as file_html:
+        for line in file_html:
+            data_html.append(line)
+    return data_html
+
 def import_from_html_to_csv_file(file_name_from = file_name_html, file_name_to = file_name_import_csv):
     '''
     Функция импорта из html в csv файл 
     '''
-
+    data_html = read_from_html_file()
+    data_to_csv =[]
+    for line in data_html:
+        if DB_HEADER[0] in line:
+            data_to_csv.append(data_former.from_html_to_value_list(line))
+    write_to_csv_file(data_to_csv, file_name_to)
   
 
-# initial_data =[["Lastname", "Name", "Phone"], 
+# initial_data =[
 #             ["Петров", "Илья", "+79234567898"], 
 #             ["Бобров", "Петр", "+79274567898"], 
 #             ["Бочкова", "Анна", "+79784336598"],
@@ -117,13 +141,3 @@ def import_from_html_to_csv_file(file_name_from = file_name_html, file_name_to =
 # data = read_from_csv_file()
 # print(data)
 
-# export_from_csv_to_json_file()
-# data = read_from_json_file()
-# print(f'json - {data}')
-
-# export_from_csv_to_html_file()
-
-# find_item = "Бобров"
-# for item in data:
-#     if find_item in item.values():
-#         print(item)
