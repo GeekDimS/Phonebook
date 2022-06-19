@@ -1,3 +1,7 @@
+"""
+Этот модуль на данный момент не используется в проекте, поскольку перешли с консольного на оконное
+приложение. Оставлен для "истории". 
+"""
 from distutils.log import error
 from statistics import mode
 import data_finder

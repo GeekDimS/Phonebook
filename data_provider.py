@@ -289,8 +289,8 @@ def main_menu():
 
 
 
-    root.config(menu = main_menu)
+    # root.config(menu = main_menu)
  
-    root.mainloop()
+    # root.mainloop()
  
-main_menu()
+#main_menu()
